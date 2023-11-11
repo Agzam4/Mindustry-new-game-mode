@@ -1,0 +1,11 @@
+{
+  displayName: "New game Mod"
+  name: "newGameMod"
+  author: "Agzam4"
+  main: "agzam4.NewGameMod"
+  description: "NG mod"
+  version: 1.0.0
+  minGameVersion: 142
+  java: true
+  hidden: false
+}
