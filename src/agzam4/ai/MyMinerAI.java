@@ -1,7 +1,7 @@
 package agzam4.ai;
 
-import agzam4.blocks.NewGameBlocks;
-import agzam4.blocks.UnloadPoint.UnloadPointBuild;
+import agzam4.content.blocks.NewGameBlocks;
+import agzam4.content.blocks.UnloadPoint.UnloadPointBuild;
 import arc.math.Mathf;
 import arc.util.Nullable;
 import mindustry.Vars;

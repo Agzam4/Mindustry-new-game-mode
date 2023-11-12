@@ -1,5 +1,6 @@
 package agzam4.debug;
 
+import arc.struct.Seq;
 import mindustry.Vars;
 
 public class Debug {
@@ -27,7 +28,7 @@ public class Debug {
 //		
 //		
 //		method.invoke(testDrive);
-//		
+//		v1v
 ////        method.
 //		
 //		method.setAccessible(a);
@@ -35,6 +36,7 @@ public class Debug {
 	
 
 	public static void init() {
+//		Seq<T>
 		Vars.mods.getScripts().context.evaluateString(Vars.mods.getScripts().scope,
 				"var mod = Vars.mods.getMod(\"agzam4mod\");\n"
 				+ "var get = (pkg) => mod.loader.loadClass(pkg).newInstance();\n"

@@ -1,9 +1,13 @@
 package agzam4;
 
 import agzam4.ai.MyMinerAI;
-import agzam4.blocks.LockedOre;
-import agzam4.blocks.NewGameBlocks;
+import agzam4.content.blocks.LockedOre;
+import agzam4.content.blocks.NewGameBlocks;
+import agzam4.content.effects.NGFx;
+import agzam4.content.planets.NewGamePlanets;
+import agzam4.struct.Vec1;
 import arc.Events;
+import arc.graphics.Color;
 import arc.math.Mathf;
 import arc.math.geom.Point2;
 import arc.math.geom.Vec2;
@@ -16,6 +20,7 @@ import mindustry.content.Items;
 import mindustry.content.UnitTypes;
 import mindustry.core.World;
 import mindustry.gen.Building;
+import mindustry.gen.Call;
 import mindustry.game.EventType.BuildingBulletDestroyEvent;
 import mindustry.game.EventType.UnitControlEvent;
 import mindustry.game.EventType.UnitCreateEvent;
@@ -121,6 +126,7 @@ public class NewGameMod extends Mod {
 					if(building != null) {
 						if(building.block == NewGameBlocks.itemStack && building.items != null) {
 							building.items.add(item, amount);
+							Call.setItem(building, item, building.items.get(item));
 							continue;
 						}
 					}
@@ -134,6 +140,7 @@ public class NewGameMod extends Mod {
 					if(building != null) {
 						if(building.block == NewGameBlocks.itemStack && building.items != null) {
 							building.items.add(item, amount);
+							Call.setItem(building, item, building.items.get(item));
 							continue;
 						}
 					}
@@ -146,7 +153,8 @@ public class NewGameMod extends Mod {
 					building = tile.build;
 					if(building != null) {
 						if(building.items != null) {
-							building.items.add(item, amount);
+							Call.setItem(building, item, amount);
+//							building.items.add(item, amount);
 						}
 					}
 				}
@@ -221,7 +229,6 @@ public class NewGameMod extends Mod {
 			});
 			
 			Vars.state.rules.defaultTeam.cores().each(core -> {
-				Log.info(core);
 				Floor sand = (Floor) (dark.x < 0 ? Blocks.sand : Blocks.darksand);
 				Point2[] ps = Edges.getEdges(core.block.size);
 				for (Point2 p : ps) {
@@ -244,7 +251,7 @@ public class NewGameMod extends Mod {
 			}
 		});
 		
-		Events.on(UnitControlEvent.class, e -> Log.info("@ @", e.player, e.unit));
+//		Events.on(UnitControlEvent.class, e -> Log.info("@ @", e.player, e.unit));
 		
 //		Events.on(BlockBuildEndEvent.class, e -> {
 //			Log.info("@ @ @", e.breaking, e.unit, e.tile);
@@ -261,6 +268,7 @@ public class NewGameMod extends Mod {
 	
 	@Override
 	public void loadContent() {
+		NGFx.load();
 		NewGameBlocks.load();
 		NewGamePlanets.load();
 		UnitTypes.mono.controller = u -> isMode() ? new MyMinerAI() : new MinerAI();
