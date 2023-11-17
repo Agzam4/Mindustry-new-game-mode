@@ -24,13 +24,14 @@ public class NewGamePlanets {
 //			techTree = TechTree.node(newSerpulo, null);
 			techTree = TechTree.nodeRoot(Core.bundle.get("planet." + this.name + ".name", this.name), Blocks.coreShard, () -> {
 				TechTree.node(NewGameBlocks.copperSeparator);
-				TechTree.node(NewGameBlocks.unloadPoint);
-				
+				TechTree.node(NewGameBlocks.unloadPoint, () -> {
+					TechTree.node(NewGameBlocks.attractor);
+					TechTree.node(NewGameBlocks.devourer);
+				});
 				TechTree.node(NewGameBlocks.pneumaticDetonator,
 						() -> TechTree.node(NewGameBlocks.differentialDetonator,
 								() -> TechTree.node(NewGameBlocks.blastDetonator)));
 			});
-			
 			generator = new SerpuloPlanetGenerator();
 			meshLoader = () -> new HexMesh(this, 6);
 			cloudMeshLoader = () -> new MultiMesh(
@@ -45,13 +46,31 @@ public class NewGamePlanets {
 			allowLaunchSchematics = true;
 			enemyCoreSpawnReplace = true;
 			allowLaunchLoadout = true;
+			clearSectorOnLose = true; // Edited
 			//doesn't play well with configs
 			
 			prebuildBase = false;
 			ruleSetter = r -> {
+				r.bannedBlocks.addAll(
+						Blocks.mechanicalDrill, 
+						Blocks.pneumaticDrill, 
+						Blocks.laserDrill, 
+						Blocks.blastDrill, 
+//						Blocks.waterExtractor, 
+//						Blocks.oilExtractor, 
+//						Blocks.cultivator,
+						Blocks.cliffCrusher, 
+						Blocks.plasmaBore, 
+						Blocks.largePlasmaBore, 
+						Blocks.impactDrill, 
+						Blocks.eruptionDrill
+				);
+				r.hideBannedBlocks = true;
+				
 				r.waveTeam = Team.crux;
 				r.placeRangeCheck = false;
 				r.showSpawns = false;
+				r.solarMultiplier = 3f;
 			};
 			iconColor = Color.valueOf("7d4dff");
 			atmosphereColor = Color.valueOf("3c1b8f");

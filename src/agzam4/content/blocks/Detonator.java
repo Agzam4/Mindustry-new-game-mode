@@ -110,7 +110,6 @@ public class Detonator extends Block {
 //				flash += (1f + ((heat - flashThreshold) / (1f - flashThreshold)) * 5.4f) * Time.delta;
 //			}
             flash += Time.delta*updates/60f;
-            
             float a = Mathf.absin(flash, 9f, 1f);
 			if(glow == null) Draw.color(Color.red, Color.white, a);
 //			Draw.alpha(0.3f);

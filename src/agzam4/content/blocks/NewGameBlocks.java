@@ -2,20 +2,25 @@ package agzam4.content.blocks;
 
 import static mindustry.type.ItemStack.with;
 
-import java.util.HashMap;
-
 import arc.graphics.Color;
+import arc.struct.ObjectMap;
 import arc.struct.Seq;
 import mindustry.Vars;
+import mindustry.content.Fx;
 import mindustry.content.Items;
+import mindustry.entities.bullet.BasicBulletType;
+import mindustry.entities.pattern.ShootBarrel;
 import mindustry.type.Category;
 import mindustry.world.Block;
+import mindustry.world.blocks.defense.turrets.ItemTurret;
 import mindustry.world.blocks.environment.OreBlock;
+import mindustry.world.meta.Env;
 
 public class NewGameBlocks {
 
-	public static Block itemStack, pneumaticDetonator, differentialDetonator, blastDetonator, copperSeparator, unloadPoint;
-	public static HashMap<Block, LockedOre> ores = new HashMap<Block, LockedOre>();
+	public static Block itemStack, pneumaticDetonator, differentialDetonator, blastDetonator, copperSeparator, unloadPoint, devourer,
+	grain, attractor;
+	public static ObjectMap<Block, LockedOre> ores = new ObjectMap<Block, LockedOre>();
 	
 	public static void load() {
 		itemStack = new ItemStackBlock("item-stack");
@@ -51,6 +56,66 @@ public class NewGameBlocks {
             size = 2;
             itemCapacity = 100;
             researchCost = with(Items.copper, 100, Items.silicon, 10);
+		}};
+		grain = new ItemTurret("grain") {{
+			requirements(Category.turret, with(Items.sand, 50));
+			ammo(Items.sand,  new BasicBulletType(2.5f, .1f){{
+				width = 7f;
+				height = 9f;
+				lifetime = 60f;
+				ammoMultiplier = 1;
+				knockback = 3f;
+			}});
+			outlineIcon = false;
+//			outputFacing
+//			Blocks.swarmer;
+
+			recoils = 1;
+			shoot = new ShootBarrel(){{
+				barrels = new float[]{
+						0, 0, 0,
+						0, 0, 10,
+						0, 0, 0,
+						0, 0, -10,
+				};
+				shots = 4;
+				shotDelay = 5f;
+			}};
+
+			recoil = 0.5f;
+			shootY = 3f;
+			reload = 20f;
+			range = 110;
+			shootCone = 15f;
+			ammoUseEffect = Fx.casing1;
+			health = 250;
+			inaccuracy = 2f;
+			rotateSpeed = 10f;
+			coolant = consumeCoolant(0.1f);
+			researchCostMultiplier = 0.05f;
+
+			limitRange();
+		}};
+
+		attractor = new Attractor("attractor") {{
+            requirements(Category.turret, with(Items.silicon, 250, Items.thorium, 80, Items.phaseFabric, 40, Items.titanium, 15));
+            scaledHealth = 250;
+            range = 180f;
+            hasPower = true;
+            consumePower(4f);
+            size = 2;
+            shootLength = 5f;
+            bulletDamage = 0f;
+            researchCostMultiplier = .1f;
+            envEnabled |= Env.space;
+		}};
+		
+		devourer = new Devourer("devourer") {{
+            requirements(Category.turret, with(Items.sporePod, 500, Items.silicon, 250, Items.blastCompound, 150, Items.plastanium, 75));
+            scaledHealth = 500;
+            size = 3;
+            researchCostMultiplier = .1f;
+			range = 80f;
 		}};
 		
 		Seq<OreBlock> defaultOres = new Seq<>();

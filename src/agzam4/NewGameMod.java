@@ -7,12 +7,8 @@ import agzam4.content.effects.NGFx;
 import agzam4.content.planets.NewGamePlanets;
 import agzam4.struct.Vec1;
 import arc.Events;
-import arc.graphics.Color;
 import arc.math.Mathf;
 import arc.math.geom.Point2;
-import arc.math.geom.Vec2;
-import arc.struct.Seq;
-import arc.util.Log;
 import mindustry.Vars;
 import mindustry.ai.types.MinerAI;
 import mindustry.content.Blocks;
@@ -22,7 +18,6 @@ import mindustry.core.World;
 import mindustry.gen.Building;
 import mindustry.gen.Call;
 import mindustry.game.EventType.BuildingBulletDestroyEvent;
-import mindustry.game.EventType.UnitControlEvent;
 import mindustry.game.EventType.UnitCreateEvent;
 import mindustry.game.EventType.UnitDestroyEvent;
 import mindustry.game.EventType.WorldLoadEndEvent;
@@ -34,7 +29,6 @@ import mindustry.world.Tile;
 import mindustry.world.blocks.ConstructBlock.ConstructBuild;
 import mindustry.world.blocks.environment.Floor;
 import mindustry.world.blocks.environment.OreBlock;
-import mindustry.world.blocks.storage.CoreBlock;
 import mindustry.world.meta.Attribute;
 
 public class NewGameMod extends Mod {
@@ -42,6 +36,7 @@ public class NewGameMod extends Mod {
 	
 	@Override
 	public void init() {
+		StacksIndexer.init();
 		Events.on(BuildingBulletDestroyEvent.class, e -> {
 			if(!isMode()) return;
 			if(e.build == null) return;
@@ -184,22 +179,6 @@ public class NewGameMod extends Mod {
 
 		Events.on(WorldLoadEndEvent.class, e -> {
 			if(!isMode()) return;
-			Vars.state.rules.bannedBlocks.addAll(
-					Blocks.mechanicalDrill, 
-					Blocks.pneumaticDrill, 
-					Blocks.laserDrill, 
-					Blocks.blastDrill, 
-//					Blocks.waterExtractor, 
-//					Blocks.oilExtractor, 
-//					Blocks.cultivator,
-					Blocks.cliffCrusher, 
-					Blocks.plasmaBore, 
-					Blocks.largePlasmaBore, 
-					Blocks.impactDrill, 
-					Blocks.eruptionDrill
-			);
-			Vars.state.rules.hideBannedBlocks = true;
-			Vars.state.rules.solarMultiplier *= 5f;
 
 			Vec1 dark = new Vec1();
 			Vars.world.tiles.eachTile(t -> {

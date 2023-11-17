@@ -1,6 +1,5 @@
 package agzam4.debug;
 
-import arc.struct.Seq;
 import mindustry.Vars;
 
 public class Debug {
