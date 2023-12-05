@@ -14,6 +14,7 @@ import arc.math.geom.Position;
 import arc.util.Tmp;
 import mindustry.content.Fx;
 import mindustry.entities.Effect;
+import mindustry.graphics.Drawf;
 import mindustry.graphics.Pal;
 import mindustry.type.Item;
 
@@ -64,6 +65,7 @@ public class NGFx {
 	        Draw.color(Color.white, e.color, Mathf.clamp(e.fin()*1.5f));
 	        Draw.alpha(Mathf.clamp(unfin*2f));
 	        Lines.line(e.x, e.y, p.getX(), p.getY());
+	        Drawf.light(e.x, e.y, p.getX(), p.getY(), 20f, e.color, 0.6f * e.fout());
 
 	        Lines.stroke(.75f);
 //	        Lines.beginLine();

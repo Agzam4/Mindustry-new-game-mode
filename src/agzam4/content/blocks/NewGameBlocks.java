@@ -2,12 +2,19 @@ package agzam4.content.blocks;
 
 import static mindustry.type.ItemStack.with;
 
+import agzam4.content.blocks.life.CoreEntropy;
+import agzam4.content.blocks.life.Devourer;
+import agzam4.content.blocks.life.LifeMover;
+import agzam4.content.blocks.life.LifeRouter;
+import agzam4.content.blocks.life.LifeWall;
 import arc.graphics.Color;
 import arc.struct.ObjectMap;
 import arc.struct.Seq;
 import mindustry.Vars;
+import mindustry.content.Blocks;
 import mindustry.content.Fx;
 import mindustry.content.Items;
+import mindustry.content.UnitTypes;
 import mindustry.entities.bullet.BasicBulletType;
 import mindustry.entities.pattern.ShootBarrel;
 import mindustry.type.Category;
@@ -19,7 +26,10 @@ import mindustry.world.meta.Env;
 public class NewGameBlocks {
 
 	public static Block itemStack, pneumaticDetonator, differentialDetonator, blastDetonator, copperSeparator, unloadPoint, devourer,
-	grain, attractor;
+	grain, attractor, 
+	
+	coreEntropy, lifeMover, lifeRouter, lifeWall;
+	
 	public static ObjectMap<Block, LockedOre> ores = new ObjectMap<Block, LockedOre>();
 	
 	public static void load() {
@@ -109,13 +119,49 @@ public class NewGameBlocks {
             researchCostMultiplier = .1f;
             envEnabled |= Env.space;
 		}};
-		
+
 		devourer = new Devourer("devourer") {{
             requirements(Category.turret, with(Items.sporePod, 500, Items.silicon, 250, Items.blastCompound, 150, Items.plastanium, 75));
             scaledHealth = 500;
             size = 3;
             researchCostMultiplier = .1f;
 			range = 80f;
+			reload = 15f;
+		}};
+
+		coreEntropy = new CoreEntropy("core-entropy") {{
+			requirements(Category.effect, with(Items.sand, 3000, Items.sporePod, 2500));
+			
+			lifeessenceCapacity = 4_000;
+			
+            unitType = UnitTypes.alpha; // TODO
+            health = 3000;
+            
+            itemCapacity = 4000;
+            size = 3;
+            thrusterLength = 48/4f;
+            armor = 15f;
+            incinerateNonBuildable = true;
+            buildCostMultiplier = 0.7f;
+
+            unitCapModifier = 15;
+            researchCostMultiplier = 0.02f;
+            
+            squareSprite = false;
+		}};
+
+		lifeMover = new LifeMover("life-mover"){{
+			requirements(Category.effect, with(Items.sporePod, 3, Items.sand, 1, Items.blastCompound, 1));
+			essenceCapacity = 250;
+		}};
+		lifeRouter = new LifeRouter("life-router"){{
+			requirements(Category.effect, with(Items.sporePod, 3, Items.sand, 1, Items.blastCompound, 1));
+			essenceCapacity = 1000;
+		}};
+		lifeWall = new LifeWall("life-wall"){{
+			requirements(Category.defense, with(Items.sporePod, 7, Items.sand, 5, Items.silicon, 5, Items.plastanium, 5, Items.blastCompound, 5));
+			essenceCapacity = 5000;
+			size = 2;
 		}};
 		
 		Seq<OreBlock> defaultOres = new Seq<>();

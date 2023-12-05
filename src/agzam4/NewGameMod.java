@@ -22,6 +22,7 @@ import mindustry.game.EventType.UnitCreateEvent;
 import mindustry.game.EventType.UnitDestroyEvent;
 import mindustry.game.EventType.WorldLoadEndEvent;
 import mindustry.mod.Mod;
+import mindustry.mod.Mods.LoadedMod;
 import mindustry.type.Item;
 import mindustry.type.ItemStack;
 import mindustry.world.Edges;
@@ -32,7 +33,8 @@ import mindustry.world.blocks.environment.OreBlock;
 import mindustry.world.meta.Attribute;
 
 public class NewGameMod extends Mod {
-	
+
+	public static final LoadedMod mod = Vars.mods.getMod(NewGameMod.class);
 	
 	@Override
 	public void init() {

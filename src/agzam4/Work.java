@@ -7,6 +7,7 @@ import arc.graphics.g2d.TextureRegion;
 import arc.math.geom.Geometry;
 import arc.math.geom.Point2;
 import arc.util.Tmp;
+import mindustry.Vars;
 import mindustry.content.Liquids;
 import mindustry.world.Block;
 import mindustry.world.Tile;
@@ -71,9 +72,13 @@ public class Work {
         }
         return false;
     } 
-    
+
     public static TextureRegion texture(String name) {
     	return Core.atlas.find(name);
+	}
+
+    public static TextureRegion modTexture(String name) {
+		return Core.atlas.find(/* NewGameMod.mod.name +*/"newgamemod-" + name);
 	}
    
 }

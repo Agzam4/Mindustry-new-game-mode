@@ -26,11 +26,20 @@ public class NewGamePlanets {
 				TechTree.node(NewGameBlocks.copperSeparator);
 				TechTree.node(NewGameBlocks.unloadPoint, () -> {
 					TechTree.node(NewGameBlocks.attractor);
-					TechTree.node(NewGameBlocks.devourer);
+//					TechTree.node(NewGameBlocks.devourer);
 				});
 				TechTree.node(NewGameBlocks.pneumaticDetonator,
 						() -> TechTree.node(NewGameBlocks.differentialDetonator,
 								() -> TechTree.node(NewGameBlocks.blastDetonator)));
+
+				TechTree.node(NewGameBlocks.coreEntropy, () -> {
+					TechTree.node(NewGameBlocks.devourer, () -> {
+						TechTree.node(NewGameBlocks.lifeMover, () -> {
+							TechTree.node(NewGameBlocks.lifeRouter);
+							TechTree.node(NewGameBlocks.lifeWall);
+						});
+					});
+				});
 			});
 			generator = new SerpuloPlanetGenerator();
 			meshLoader = () -> new HexMesh(this, 6);
@@ -72,6 +81,7 @@ public class NewGamePlanets {
 				r.showSpawns = false;
 				r.solarMultiplier = 3f;
 			};
+			
 			iconColor = Color.valueOf("7d4dff");
 			atmosphereColor = Color.valueOf("3c1b8f");
 			atmosphereRadIn = 0.02f;
