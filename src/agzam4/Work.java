@@ -77,8 +77,12 @@ public class Work {
     	return Core.atlas.find(name);
 	}
 
+    public static TextureRegion texture(String name, String def) {
+    	return Core.atlas.find(name, def);
+	}
+
     public static TextureRegion modTexture(String name) {
-		return Core.atlas.find(/* NewGameMod.mod.name +*/"newgamemod-" + name);
+		return Core.atlas.find(/* NewGameMod.mod.name +*/NewGameMod.prefix + name);
 	}
    
 }

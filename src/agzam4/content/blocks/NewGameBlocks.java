@@ -2,11 +2,12 @@ package agzam4.content.blocks;
 
 import static mindustry.type.ItemStack.with;
 
-import agzam4.content.blocks.life.CoreEntropy;
 import agzam4.content.blocks.life.Devourer;
+import agzam4.content.blocks.life.LifeCore;
 import agzam4.content.blocks.life.LifeMover;
 import agzam4.content.blocks.life.LifeRouter;
 import agzam4.content.blocks.life.LifeWall;
+import agzam4.content.units.NGUnitTypes;
 import arc.graphics.Color;
 import arc.struct.ObjectMap;
 import arc.struct.Seq;
@@ -21,6 +22,8 @@ import mindustry.type.Category;
 import mindustry.world.Block;
 import mindustry.world.blocks.defense.turrets.ItemTurret;
 import mindustry.world.blocks.environment.OreBlock;
+import mindustry.world.blocks.storage.CoreBlock;
+import mindustry.world.meta.BuildVisibility;
 import mindustry.world.meta.Env;
 
 public class NewGameBlocks {
@@ -28,7 +31,8 @@ public class NewGameBlocks {
 	public static Block itemStack, pneumaticDetonator, differentialDetonator, blastDetonator, copperSeparator, unloadPoint, devourer,
 	grain, attractor, 
 	
-	coreEntropy, lifeMover, lifeRouter, lifeWall;
+	coreEntropy, coreDissipation, 
+	lifeMover, lifeRouter, lifeWall;
 	
 	public static ObjectMap<Block, LockedOre> ores = new ObjectMap<Block, LockedOre>();
 	
@@ -129,27 +133,42 @@ public class NewGameBlocks {
 			reload = 15f;
 		}};
 
-		coreEntropy = new CoreEntropy("core-entropy") {{
+		coreEntropy = new LifeCore("core-entropy") {{
 			requirements(Category.effect, with(Items.sand, 3000, Items.sporePod, 2500));
-			
-			lifeessenceCapacity = 4_000;
-			
-            unitType = UnitTypes.alpha; // TODO
-            health = 3000;
-            
+			unitType = NGUnitTypes.disorderer;
+			damageReflectionMultiplier = 1f;
+			lifeessenceCapacity = 2_200;
             itemCapacity = 4000;
+	        health = 1100;
+	        isFirstTier = true;
+            unitCapModifier = 8;
             size = 3;
-            thrusterLength = 48/4f;
-            armor = 15f;
-            incinerateNonBuildable = true;
-            buildCostMultiplier = 0.7f;
-
-            unitCapModifier = 15;
-            researchCostMultiplier = 0.02f;
-            
-            squareSprite = false;
+            researchCostMultiplier = 0.05f;
+		}};
+		
+		coreDissipation = new LifeCore("core-dissipation") {{
+            requirements(Category.effect, with(Items.sand, 3000, Items.sporePod, 3000, Items.blastCompound, 2000));
+            unitType = NGUnitTypes.absorber;  // TODO
+			damageReflectionMultiplier = 2f;
+			lifeessenceCapacity = 7_000;
+            itemCapacity = 9000;
+            health = 3500;
+            thrusterLength = 34/4f;
+            size = 4;
+            unitCapModifier = 16;
+            researchCostMultiplier = 0.07f;
 		}};
 
+//		coreLifeLvl3 = new LifeCore("core-lif-lvl3"){{
+//			requirements(Category.effect, with(Items.copper, 8000, Items.lead, 8000, Items.silicon, 5000, Items.thorium, 4000));
+//			unitType = NGUnitTypes.disorderer; // TODO
+//			damageReflectionMultiplier = 4f;
+//			lifeessenceCapacity = 12_000;
+//          	health = 6000;
+//        }};
+
+		// Dissipation
+		
 		lifeMover = new LifeMover("life-mover"){{
 			requirements(Category.effect, with(Items.sporePod, 3, Items.sand, 1, Items.blastCompound, 1));
 			essenceCapacity = 250;

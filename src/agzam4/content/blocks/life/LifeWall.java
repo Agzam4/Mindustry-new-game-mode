@@ -40,6 +40,14 @@ public class LifeWall extends LifeEssenceStorageBlock {
 		
 		private float flash;
 
+		float fxAttackCooldown = 0;
+		
+		@Override
+		public void updateTile() {
+			if(fxAttackCooldown > 0) fxAttackCooldown--;
+			super.updateTile();
+		}
+		
 		@Override
 		public boolean absorbLasers() {
 			return essence > .0001f;
@@ -70,9 +78,10 @@ public class LifeWall extends LifeEssenceStorageBlock {
 				if(other.owner() != null) {
 					if(other.owner() instanceof Healthc) {
 						Healthc u = (Healthc) other.owner();
-						u.damage(other.damage()/2f);
-						if(fxCooldown <= 0) NGFx.sporeBeam.at(u.x(), u.y(), rotation, Pal.spore, this);
-						if(fxCooldown <= 0) Fx.pointHit.at(u.x(), u.y(), Pal.spore);
+						u.damagePierce(other.damage()/2f);
+						if(fxAttackCooldown <= 0) NGFx.sporeBeam.at(u.x(), u.y(), rotation, Pal.spore, this);
+						if(fxAttackCooldown <= 0) Fx.pointHit.at(u.x(), u.y(), Pal.spore);
+						fxAttackCooldown = 12f;
 					}
 				}
 				if(other.type.continuousDamage() < 0) {

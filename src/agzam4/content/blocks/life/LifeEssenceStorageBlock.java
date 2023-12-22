@@ -96,8 +96,8 @@ public class LifeEssenceStorageBlock extends Block {
 		
 		@Override
 		public void updateTile() {
-			super.updateTile();
 			if(fxCooldown > 0) fxCooldown--;
+			super.updateTile();
 		}
 
         

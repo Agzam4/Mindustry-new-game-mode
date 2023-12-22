@@ -1,10 +1,13 @@
 package agzam4;
 
 import agzam4.ai.MyMinerAI;
+import agzam4.content.NGStatusEffects;
 import agzam4.content.blocks.LockedOre;
 import agzam4.content.blocks.NewGameBlocks;
 import agzam4.content.effects.NGFx;
 import agzam4.content.planets.NewGamePlanets;
+import agzam4.content.units.NGUnitTypes;
+import agzam4.debug.Debug;
 import agzam4.struct.Vec1;
 import arc.Events;
 import arc.math.Mathf;
@@ -25,19 +28,24 @@ import mindustry.mod.Mod;
 import mindustry.mod.Mods.LoadedMod;
 import mindustry.type.Item;
 import mindustry.type.ItemStack;
+import mindustry.type.StatusEffect;
 import mindustry.world.Edges;
 import mindustry.world.Tile;
 import mindustry.world.blocks.ConstructBlock.ConstructBuild;
 import mindustry.world.blocks.environment.Floor;
 import mindustry.world.blocks.environment.OreBlock;
+import mindustry.world.blocks.environment.Prop;
 import mindustry.world.meta.Attribute;
 
 public class NewGameMod extends Mod {
 
+	public static final String prefix = "newgamemod-";
+	
 	public static final LoadedMod mod = Vars.mods.getMod(NewGameMod.class);
 	
 	@Override
 	public void init() {
+		Debug.init();
 		StacksIndexer.init();
 		Events.on(BuildingBulletDestroyEvent.class, e -> {
 			if(!isMode()) return;
@@ -184,13 +192,6 @@ public class NewGameMod extends Mod {
 
 			Vec1 dark = new Vec1();
 			Vars.world.tiles.eachTile(t -> {
-				if(t.block() != Blocks.air) {
-					float oil = t.block().attributes.get(Attribute.oil);
-					float spores = t.block().attributes.get(Attribute.spores);
-					if(oil != 0) dark.add(oil-1f);
-					if(spores != 0) dark.add(spores-1f);
-					return;
-				}
 				if(t.overlay() instanceof OreBlock) {
 //					OreBlock ore = (OreBlock) t.overlay();
 					LockedOre locked = NewGameBlocks.ores.get(t.overlay());
@@ -206,6 +207,13 @@ public class NewGameMod extends Mod {
 //							}
 //						}
 //					}
+				}
+				if(t.block() != Blocks.air && !(t.block() instanceof Prop)) {
+					float oil = t.block().attributes.get(Attribute.oil);
+					float spores = t.block().attributes.get(Attribute.spores);
+					if(oil != 0) dark.add(oil-1f);
+					if(spores != 0) dark.add(spores-1f);
+					return;
 				}
 			});
 			
@@ -250,8 +258,10 @@ public class NewGameMod extends Mod {
 	@Override
 	public void loadContent() {
 		NGFx.load();
+		NGUnitTypes.load();
 		NewGameBlocks.load();
 		NewGamePlanets.load();
+		NGStatusEffects.load();
 		UnitTypes.mono.controller = u -> isMode() ? new MyMinerAI() : new MinerAI();
 	}
 	

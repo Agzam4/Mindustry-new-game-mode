@@ -37,10 +37,14 @@ public class Debug {
 	public static void init() {
 //		Seq<T>
 		Vars.mods.getScripts().context.evaluateString(Vars.mods.getScripts().scope,
-				"var mod = Vars.mods.getMod(\"agzam4mod\");\n"
+				"var mod = Vars.mods.getMod(\"newgamemod\");\n"
 				+ "var get = (pkg) => mod.loader.loadClass(pkg).newInstance();\n"
-				+ "const AgzamDebug = get(\"agzam4.debug.Debug\")\n"
-				+ "const AgzamUI = get(\"agzam4.MobileUI\")", "main.js", 0);
+				+ "const NGUnitTypes = get(\"agzam4.content.units.NGUnitTypes\");\n"
+				+ "const NewGameBlocks = get(\"agzam4.content.blocks.NewGameBlocks\");\n"
+//				+ "const essence = get(\"agzam4.content.units.LifeUnitType.essence\");\n"
+				+ "", "main.js", 0);
+		
+		
 	}
 	
 	
