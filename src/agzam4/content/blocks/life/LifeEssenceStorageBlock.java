@@ -2,7 +2,6 @@ package agzam4.content.blocks.life;
 
 import static mindustry.Vars.tilesize;
 
-import agzam4.content.blocks.life.LifeMover.LifeMoverBuild;
 import agzam4.content.effects.NGFx;
 import arc.Core;
 import arc.graphics.Color;
@@ -17,6 +16,7 @@ import mindustry.Vars;
 import mindustry.core.Renderer;
 import mindustry.game.Team;
 import mindustry.gen.Building;
+import mindustry.gen.Buildingc;
 import mindustry.gen.Bullet;
 import mindustry.graphics.Drawf;
 import mindustry.graphics.Pal;
@@ -60,16 +60,16 @@ public class LifeEssenceStorageBlock extends Block {
         super.setStats();
     }
     
-    public static void drawEssenceLight(LifeEssenceBuild build, TextureRegion glowRegion, TextureRegion glowLightRegion, float flash) {
+    public static void drawEssenceLight(LifeEssenceBuild build, Buildingc b, TextureRegion glowRegion, TextureRegion glowLightRegion, float flash) {
         float glow = Mathf.clamp(build.essence()/build.essenceCapacity());
-        Drawf.light(build, build.block().size*Vars.tilesize, Tmp.c1.set(Color.white), glow);
+        Drawf.light(b, b.block().size*Vars.tilesize, Tmp.c1.set(Color.white), glow);
         
         glow = Mathf.clamp(build.essence()*2f/build.essenceCapacity());
         float light = Mathf.clamp((build.essence()-build.essenceCapacity()/2f)/build.essenceCapacity(), 0, .5f)*2f*(Mathf.absin(flash, 9f, 1f)/2f+.5f);
 
-		Drawf.additive(glowRegion, Tmp.c1.set(fillColor).mula(glow), build.x(), build.y(), build.rotdeg());
-        Drawf.additive(glowLightRegion, Tmp.c1.set(Color.white).mula(light), build.x(), build.y(), build.rotdeg());
-        Drawf.light(build, build.block().size*Vars.tilesize*2f, Tmp.c1.set(fillColor), light);
+		Drawf.additive(glowRegion, Tmp.c1.set(fillColor).mula(glow), b.x(), b.y(), b.rotdeg());
+        Drawf.additive(glowLightRegion, Tmp.c1.set(Color.white).mula(light), b.x(), b.y(), b.rotdeg());
+        Drawf.light(b, b.block().size*Vars.tilesize*2f, Tmp.c1.set(fillColor), light);
 	}
 
 	public class LifeEssenceStorageBuild extends Building implements LifeEssenceBuild {

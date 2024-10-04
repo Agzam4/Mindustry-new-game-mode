@@ -3,11 +3,12 @@ package agzam4;
 import static mindustry.Vars.world;
 
 import arc.Core;
+import arc.func.Func;
+import arc.graphics.Color;
 import arc.graphics.g2d.TextureRegion;
 import arc.math.geom.Geometry;
 import arc.math.geom.Point2;
 import arc.util.Tmp;
-import mindustry.Vars;
 import mindustry.content.Liquids;
 import mindustry.world.Block;
 import mindustry.world.Tile;

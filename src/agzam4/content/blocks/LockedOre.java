@@ -1,10 +1,14 @@
 package agzam4.content.blocks;
 
+import arc.Core;
 import arc.graphics.g2d.TextureRegion;
+import arc.graphics.g2d.TextureAtlas.AtlasRegion;
 import arc.math.Mathf;
 import arc.struct.EnumSet;
+import mindustry.Vars;
 import mindustry.content.Blocks;
 import mindustry.content.Items;
+import mindustry.editor.MapEditor;
 import mindustry.gen.Building;
 import mindustry.world.Tile;
 import mindustry.world.blocks.environment.OreBlock;
@@ -15,10 +19,11 @@ import mindustry.world.meta.BlockGroup;
 public class LockedOre extends OverlayFloor {
 	
 	OreBlock defaultOre;
+	String defaultOreName;
 	
 	public LockedOre(String name) {
-		super(name);
-		
+		super(name + "-locked");
+		defaultOreName = name;
 //        hasItems = true;
 //        update = true;
 //        destructible = true;
@@ -47,9 +52,41 @@ public class LockedOre extends OverlayFloor {
 	}
 	
 	@Override
+	public void loadIcon() {
+        fullIcon =
+                Core.atlas.find(getContentType().name() + "-" + defaultOreName + "-full",
+                Core.atlas.find(defaultOreName + "-full",
+                Core.atlas.find(defaultOreName,
+                Core.atlas.find(getContentType().name() + "-" + defaultOreName,
+                Core.atlas.find(defaultOreName + "1")))));
+        uiIcon = Core.atlas.find(getContentType().name() + "-" + defaultOreName + "-ui", fullIcon);
+        editorIcon = Core.atlas.find(getContentType().name() + "-" + defaultOreName + "-ui", fullIcon);
+        
+//        Vars.editor;
+	}
+	
+	@Override
 	public void drawBase(Tile tile) {
 		defaultOre.drawBase(tile);
 //		 Draw.rect(defaultOre.variantRegions[Mathf.randomSeed(tile.pos(), 0, Math.max(0, defaultOre.variantRegions.length - 1))], tile.worldx(), tile.worldy());
+	}
+	
+	@Override
+	public TextureRegion editorIcon() {
+		return uiIcon;
+	}
+	
+	@Override
+	public TextureRegion[] editorVariantRegions() {
+        if(editorVariantRegions == null){
+            editorVariantRegions = new TextureRegion[] {editorIcon};
+        }
+        return editorVariantRegions;
+	}
+	
+	@Override
+	public TextureRegion[] icons() {
+        return new TextureRegion[]{Core.atlas.find(Core.atlas.has(defaultOreName) ? defaultOreName : defaultOreName + "1")};
 	}
 	
     @Override
@@ -75,6 +112,12 @@ public class LockedOre extends OverlayFloor {
     public int minimapColor(Tile tile){
         return defaultOre.minimapColor(tile);
     }
+    
+    public boolean canDetonateOre(Tile tile, int power) {
+		if(tile.overlay() == null) return false;
+		if(defaultOre.itemDrop.hardness > power) return false;
+		return true;
+	}
 
 	public void detonateOre(Tile tile, int power) {
 		if(tile.overlay() == null) return;

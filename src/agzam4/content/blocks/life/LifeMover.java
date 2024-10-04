@@ -4,11 +4,10 @@ import static mindustry.Vars.tilesize;
 import static mindustry.Vars.world;
 
 import agzam4.Work;
+import agzam4.content.blocks.NewGameBlocks;
 import agzam4.content.effects.NGFx;
-import arc.graphics.Blending;
 import arc.graphics.Color;
 import arc.graphics.g2d.Draw;
-import arc.graphics.g2d.Lines;
 import arc.graphics.g2d.TextureRegion;
 import arc.math.Mathf;
 import arc.math.geom.Geometry;
@@ -20,12 +19,11 @@ import arc.util.Time;
 import arc.util.Tmp;
 import mindustry.Vars;
 import mindustry.content.Blocks;
-import mindustry.core.Renderer;
 import mindustry.gen.Building;
 import mindustry.graphics.Drawf;
-import mindustry.graphics.Layer;
 import mindustry.graphics.Pal;
 import mindustry.input.Placement;
+import mindustry.world.Block;
 import mindustry.world.Tile;
 
 public class LifeMover extends LifeEssenceStorageBlock {
@@ -45,6 +43,13 @@ public class LifeMover extends LifeEssenceStorageBlock {
 //        sync = true;
         allowDiagonal = false;
         rotate = true;
+        
+        replaceable = true;
+	}
+	
+	@Override
+	public boolean canReplace(Block other) {
+		return other == this || other == NewGameBlocks.lifeRouter || super.canReplace(other);
 	}
 
     @Override
@@ -68,23 +73,15 @@ public class LifeMover extends LifeEssenceStorageBlock {
 	
 	@Override
 	public void drawPlace(int x, int y, int rotation, boolean valid) {
-//		super.drawPlace(x, y, rotation, valid);
-
 		rotation = Mathf.clamp(rotation, 0, 3);
         Point2 dir = Geometry.d4[rotation];
-        
-        
-        
 		int offset = size/2;
-		//find first block with power in range
 		for(int j = 1 + offset; j <= range + offset; j++){
 			Building other = world.build(x + j * dir.x, y + j * dir.y);
-
 			if(other != null && other.isInsulated()){
 				break;
 			}
-
-			if(other != null && other instanceof LifeEssenceBuild) {// && other.team == team){
+			if(other != null && other instanceof LifeEssenceBuild) {
 				Tile tile = world.tile(x + j * dir.x, y + j * dir.y);
 				Drawf.dashLine(Pal.spore, x*tilesize, y*tilesize, tile.worldx(), tile.worldy());
 				return;

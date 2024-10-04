@@ -4,38 +4,33 @@ import static mindustry.Vars.tilesize;
 import static mindustry.Vars.world;
 
 import agzam4.Work;
+import agzam4.content.blocks.NewGameBlocks;
 import agzam4.content.blocks.life.LifeMover.LifeMoverBuild;
 import agzam4.content.effects.NGFx;
 import arc.graphics.Color;
 import arc.graphics.g2d.Draw;
-import arc.graphics.g2d.Fill;
-import arc.graphics.g2d.Font;
-import arc.graphics.g2d.GlyphLayout;
 import arc.graphics.g2d.TextureRegion;
 import arc.math.Mathf;
 import arc.math.geom.Geometry;
 import arc.math.geom.Point2;
 import arc.math.geom.Vec2;
-import arc.scene.ui.layout.Scl;
 import arc.struct.Seq;
 import arc.util.Nullable;
 import arc.util.Time;
 import arc.util.Tmp;
-import arc.util.pooling.Pools;
 import mindustry.Vars;
 import mindustry.gen.Building;
 import mindustry.graphics.Drawf;
-import mindustry.graphics.Layer;
 import mindustry.graphics.Pal;
 import mindustry.input.Placement;
-import mindustry.ui.Fonts;
+import mindustry.world.Block;
 import mindustry.world.Tile;
 
 public class LifeRouter extends LifeEssenceStorageBlock {
 
     public TextureRegion glowRegion, glowLightRegion;
     public float reload = 60f;
-	private int range = 5;
+    public int range = 5;
     
 	public LifeRouter(String name) {
 		super(name);
@@ -43,8 +38,14 @@ public class LifeRouter extends LifeEssenceStorageBlock {
         solid = true;
         allowDiagonal = false;
         rotate = false;
+        replaceable = true;
 	}
 
+	@Override
+	public boolean canReplace(Block other) {
+		return other == this || other == NewGameBlocks.lifeRouter || super.canReplace(other);
+	}
+	
     @Override
     public void init(){
         super.init();

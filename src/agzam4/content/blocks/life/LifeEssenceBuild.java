@@ -5,12 +5,11 @@ import arc.math.Mathf;
 import arc.util.Nullable;
 import mindustry.core.UI;
 import mindustry.gen.Building;
-import mindustry.gen.Buildingc;
 import mindustry.graphics.Pal;
 import mindustry.ui.Bar;
 import mindustry.world.Block;
 
-public interface LifeEssenceBuild extends Buildingc {
+public interface LifeEssenceBuild /* extends Buildingc */ {
 
 	public float essence();
 	public float essenceCapacity();
@@ -18,9 +17,10 @@ public interface LifeEssenceBuild extends Buildingc {
 	
 	public static void setBars(Block block) {
 		block.addBar("life-essence", (Building e) -> new Bar(
-				() -> Core.bundle.format("bar.life-essenceamount", UI.formatAmount((long)((LifeEssenceBuild) e).essence())), 
+				() -> Core.bundle.format("bar.life-essenceamount", 
+						e instanceof LifeEssenceBuild ? UI.formatAmount((long)((LifeEssenceBuild) e).essence()) : -1), 
 				() -> Pal.spore, 
-				() -> ((LifeEssenceBuild)e).essence()/((LifeEssenceBuild)e).essenceCapacity()
+				() -> e instanceof LifeEssenceBuild ? ((LifeEssenceBuild)e).essence()/((LifeEssenceBuild)e).essenceCapacity() : 1
 		));
 	}
 

@@ -40,7 +40,7 @@ public class LifeUnitType extends MyUnitType {
 
 	public int lightWeaponIndex = -1;
 
-	private static int checkCooldown = 60*60*5; // 5 minutes
+//	private static int checkCooldown = 60*60*5; // 5 minutes
 
 	private static ObjectMap<Weapon, TextureRegion> glowRegions = new ObjectMap<Weapon, TextureRegion>();
 	private static ObjectMap<Weapon, TextureRegion> glowLightRegions = new ObjectMap<Weapon, TextureRegion>();
@@ -111,7 +111,7 @@ public class LifeUnitType extends MyUnitType {
 	
 	private static void clearOld() {
 		removeIds.clear();
-		essences.keys().forEach(id -> {
+		essences.each((id,e) -> {
 			if(Groups.unit.getByID(id) == null) {
 				removeIds.add(id);
 			}

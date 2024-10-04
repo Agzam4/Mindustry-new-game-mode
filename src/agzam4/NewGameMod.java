@@ -20,7 +20,9 @@ import mindustry.content.UnitTypes;
 import mindustry.core.World;
 import mindustry.gen.Building;
 import mindustry.gen.Call;
+import mindustry.game.EventType;
 import mindustry.game.EventType.BuildingBulletDestroyEvent;
+import mindustry.game.EventType.SectorCaptureEvent;
 import mindustry.game.EventType.UnitCreateEvent;
 import mindustry.game.EventType.UnitDestroyEvent;
 import mindustry.game.EventType.WorldLoadEndEvent;
@@ -28,7 +30,6 @@ import mindustry.mod.Mod;
 import mindustry.mod.Mods.LoadedMod;
 import mindustry.type.Item;
 import mindustry.type.ItemStack;
-import mindustry.type.StatusEffect;
 import mindustry.world.Edges;
 import mindustry.world.Tile;
 import mindustry.world.blocks.ConstructBlock.ConstructBuild;
@@ -45,12 +46,14 @@ public class NewGameMod extends Mod {
 	
 	@Override
 	public void init() {
+//		Vars.renderer.maxZoom = 20;
 		Debug.init();
 		StacksIndexer.init();
 		Events.on(BuildingBulletDestroyEvent.class, e -> {
 			if(!isMode()) return;
 			if(e.build == null) return;
 			if(e.build instanceof ConstructBuild) return;
+			if(e.build.block == NewGameBlocks.mossPlant) return;
 			
 			ItemStack[] stacks = e.build.block.requirements;
 			for (int i = 0; i < stacks.length; i++) {
@@ -102,6 +105,15 @@ public class NewGameMod extends Mod {
 							building.items.add(item, amount);
 						}
 					}
+				}
+			}
+		});
+		
+		Events.on(SectorCaptureEvent.class, e -> {
+			if(e.initialCapture && e.sector == NewGamePlanets.start.sector) {
+				if(Vars.state.rules.defaultTeam.core() != null) {
+					Vars.state.rules.defaultTeam.core().items().add(Items.copper, 1100);
+					Vars.state.rules.defaultTeam.core().items().add(Items.lead, 800);
 				}
 			}
 		});
@@ -239,6 +251,14 @@ public class NewGameMod extends Mod {
 				e.unit.controller(new MyMinerAI());
 			}
 		});
+		
+//		Events.on(EventType.ContentInitEvent.class, e -> {
+//			NewGameBlocks.ores.each((b, o) -> {
+//		        o.fullIcon = b.fullIcon;
+//		        o.uiIcon = b.uiIcon;
+//		        o.region = b.region;
+//			});
+//		});
 		
 //		Events.on(UnitControlEvent.class, e -> Log.info("@ @", e.player, e.unit));
 		

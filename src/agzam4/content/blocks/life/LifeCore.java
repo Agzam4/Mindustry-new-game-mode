@@ -1,17 +1,15 @@
 package agzam4.content.blocks.life;
 
-import static mindustry.Vars.ui;
-
 import agzam4.Work;
 import agzam4.content.NGStat;
 import agzam4.content.effects.NGFx;
-import arc.Core;
-import arc.graphics.Color;
+import arc.graphics.Blending;
 import arc.graphics.g2d.Draw;
 import arc.graphics.g2d.TextureRegion;
+import arc.math.Angles;
 import arc.math.Interp;
 import arc.math.Mathf;
-import arc.util.Scaling;
+import arc.math.Rand;
 import arc.util.Time;
 import arc.util.io.Reads;
 import arc.util.io.Writes;
@@ -22,20 +20,27 @@ import mindustry.gen.Bullet;
 import mindustry.gen.Healthc;
 import mindustry.gen.Player;
 import mindustry.graphics.Pal;
-import mindustry.ui.Styles;
+import mindustry.logic.LAccess;
 import mindustry.world.Block;
 import mindustry.world.Tile;
 import mindustry.world.blocks.storage.CoreBlock;
-import mindustry.world.meta.Stat;
 import mindustry.world.meta.StatUnit;
 
 public class LifeCore extends CoreBlock {
 	
-    public TextureRegion glowRegion, glowLightRegion;
+    public TextureRegion glowRegion, glowLightRegion, botRegion, botRegionLight;
     public float damageReflectionMultiplier = 1;
+    static Rand rand = new Rand();
+    
+
+    public float botAngle = 60f, origin = 0.61f;
+    public float sclMin = 30f, sclMax = 50f, magMin = 5f, magMax = 15f, timeRange = 40f, spread = 0f;
 
 	// 421
     public float lifeessenceCapacity = 1_000;
+    public float lobes[][] = {
+    		{0,0,0,8}
+    };
 	
 	public LifeCore(String name) {
 		super(name);
@@ -46,6 +51,8 @@ public class LifeCore extends CoreBlock {
 		super.loadIcon();
 		glowRegion = Work.texture(name + "-glow");
 		glowLightRegion = Work.texture(name + "-glow-light");
+		botRegion = Work.texture(name + "-lobe");
+		botRegionLight = Work.texture(name + "-lobe-glow");
 	}
 	
 	@Override
@@ -57,7 +64,7 @@ public class LifeCore extends CoreBlock {
     @Override
     public boolean canReplace(Block other){
     	if(isFirstTier) return super.canReplace(other) || (other instanceof CoreBlock && size >= other.size && other != this);
-    	return super.canReplace(other) || (other instanceof LifeCore && size >= other.size && other != this);        
+    	return super.canReplace(other) && (other instanceof LifeCore && size >= other.size && other != this);        
     }
     
     @Override
@@ -106,6 +113,11 @@ public class LifeCore extends CoreBlock {
                 Draw.reset();
 
                 drawTeamTop();
+                
+
+//                if(centerRegion.found()){
+//                    Draw.rect(centerRegion, tile.worldx(), tile.worldy());
+//                }
             } else {
                 super.draw();
             }
@@ -127,18 +139,70 @@ public class LifeCore extends CoreBlock {
 			if(fxAttackCooldown > 0) fxAttackCooldown--;
 		}
         
+
+        @Override
+        public double sense(LAccess sensor) {
+        	if(sensor == LAccess.liquidCapacity || sensor == LAccess.powerCapacity) return essenceCapacity();
+        	if(sensor == LAccess.totalLiquids || sensor == LAccess.totalPower) return essence();
+        	return super.sense(sensor);
+        }
+		
         @Override
         public void drawTeamTop() {
             if(!block.teamRegion.found()) return;
-            if(block.teamRegions[team.id] == block.teamRegion) {
-            	Draw.color(team.color.lerp(Pal.spore, Mathf.absin(flash, 9f, 1f)));
-            } else {
-                Draw.alpha(1f-Mathf.absin(flash, 9f, 1f)*essence()/essenceCapacity());
-            }
+//            if(block.teamRegions[team.id] == block.teamRegion) {
+//            	Draw.color(team.color.lerp(Pal.spore, Mathf.absin(flash, 9f, 1f)));
+//            } else {
+//                Draw.alpha(1f-Mathf.absin(flash, 9f, 1f)*essence()/essenceCapacity());
+//            }
             Draw.rect(block.teamRegions[team.id], x, y);
             Draw.color();
 
-            LifeEssenceStorageBlock.drawEssenceLight(this, glowRegion, glowLightRegion, flash);
+            rand.setSeed(tile.pos());
+            float pz = Draw.z();
+            for(float[] lobe : lobes){
+                float offset = rand.random(180f);
+                int count = (int) (lobe.length > 3 ? lobe[3] : 1);
+                float cx = x() + lobe[0] - Vars.tilesize/4f;
+                float cy = y() + lobe[1];
+                for(int i = 0; i < count; i++){
+                    float ba = i / (float)count * 360f + offset + rand.range(spread) + lobe[2], angle = ba + Mathf.sin(Time.time + rand.random(0, timeRange), rand.random(sclMin, sclMax), rand.random(magMin, magMax));
+                    float w = botRegion.width * botRegion.scl(), h = botRegion.height * botRegion.scl();
+
+                    Draw.z(pz);
+                    Draw.color(0,0,0,.5f);
+                    Draw.rect(botRegionLight,
+                            cx - Angles.trnsx(angle, origin) + w*0.5f, cy - Angles.trnsy(angle, origin),
+                            w, h,
+                            origin*4f, h/2f,
+                            angle
+                        );
+                    Draw.color();
+                    
+                    Draw.z(pz+.1f);
+                    Draw.rect(botRegion,
+                    		cx - Angles.trnsx(angle, origin) + w*0.5f, cy - Angles.trnsy(angle, origin),
+                        w, h,
+                        origin*4f, h/2f,
+                        angle
+                    );
+                    
+                    Draw.z(pz+.2f);
+                    Draw.color(Pal.spore);
+                    Draw.alpha(Mathf.clamp(essence()/essenceCapacity()));
+                    Draw.blend(Blending.additive);
+                    Draw.rect(botRegionLight,
+                    		cx - Angles.trnsx(angle, origin) + w*0.5f, cy - Angles.trnsy(angle, origin),
+                    		w, h,
+                            origin*4f, h/2f,
+                            angle
+                        );
+                    Draw.blend();
+                    Draw.color();
+                }
+            }
+            
+            LifeEssenceStorageBlock.drawEssenceLight(this, this, glowRegion, glowLightRegion, flash);
         }
 
 		@Override

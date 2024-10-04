@@ -5,7 +5,7 @@ import agzam4.content.units.LifeUnitType;
 import arc.Events;
 import arc.graphics.Color;
 import arc.util.Tmp;
-import mindustry.entities.bullet.BasicBulletType;
+import mindustry.entities.bullet.RailBulletType;
 import mindustry.game.EventType.UnitBulletDestroyEvent;
 import mindustry.game.EventType.UnitDamageEvent;
 import mindustry.gen.Bullet;
@@ -14,30 +14,14 @@ import mindustry.gen.Hitboxc;
 import mindustry.gen.Unit;
 import mindustry.graphics.Pal;
 
-public class LifeBulletType extends BasicBulletType {
+public class LifeLaserBulletType extends RailBulletType {
 
     static final UnitDamageEvent bulletDamageEvent = new UnitDamageEvent();
-
-    public LifeBulletType() {
+    
+    public LifeLaserBulletType() {
     	super();
-    	setProps();
+    	lightColor = lightningColor = trailColor = hitColor = Color.valueOf("af79f7");
     }
-
-    public LifeBulletType(float speed, float damage) {
-    	super(speed, damage);
-    	setProps();
-    }
-    
-    public LifeBulletType(float speed, float damage, String bulletSprite) {
-    	super(speed, damage, bulletSprite);
-    	setProps();
-    }
-    
-    private void setProps() {
-        backColor = Color.valueOf("f1e8ff");
-        frontColor = Color.valueOf("af79f7");
-    	hitColor = Color.valueOf("af79f7");
-	}
     
 	@Override
 	public void hitEntity(Bullet b, Hitboxc entity, float health) {

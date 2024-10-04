@@ -2,17 +2,12 @@ package agzam4.content.blocks.life;
 
 import agzam4.Work;
 import agzam4.content.effects.NGFx;
-import arc.graphics.Color;
 import arc.graphics.g2d.Draw;
 import arc.graphics.g2d.TextureRegion;
-import arc.math.Mathf;
 import arc.util.Time;
-import arc.util.Tmp;
-import mindustry.Vars;
 import mindustry.content.Fx;
 import mindustry.gen.Bullet;
 import mindustry.gen.Healthc;
-import mindustry.graphics.Drawf;
 import mindustry.graphics.Pal;
 
 public class LifeWall extends LifeEssenceStorageBlock {
@@ -59,7 +54,7 @@ public class LifeWall extends LifeEssenceStorageBlock {
             
             flash += Time.delta;
             
-            drawEssenceLight(this, glowRegion, glowLightRegion, flash);
+            LifeEssenceStorageBlock.drawEssenceLight(this, this, glowRegion, glowLightRegion, flash);
 //            float glow = Mathf.clamp(essence()/essenceCapacity());
 //            Drawf.light(this, size*Vars.tilesize, Tmp.c1.set(Color.white), glow);
 //            
